@@ -61,6 +61,16 @@ export const filtrarCategoria = async (categoria) => {
 
 };
 
+export const agregarImagen = async (id, urlImagen) => {
+
+    return await Product.findByIdAndUpdate(
+        id,
+        { $push: { imagenes: urlImagen } },
+        { new: true }
+    );
+
+};
+
 export const filtrarPrecio = async (min, max) => {
 
     return await Product.find({

@@ -1,4 +1,5 @@
 import * as productService from "../services/product.service.js";
+import { construirUrlArchivo } from "../services/upload.service.js";
 
 export const crearProducto = async (req, res) => {
 
@@ -142,6 +143,48 @@ export const filtrarCategoria = async (req, res) => {
     } catch (error) {
 
         res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
+
+export const subirImagen = async (req, res) => {
+
+    try {
+
+        if (!req.file) {
+
+            return res.status(400).json({
+                success: false,
+                message: "No se recibió ninguna imagen."
+            });
+
+        }
+
+        const urlImagen = construirUrlArchivo(req, req.file.filename);
+
+        const producto = await productService.agregarImagen(req.params.id, urlImagen);
+
+        if (!producto) {
+
+            return res.status(404).json({
+                success: false,
+                message: "Producto no encontrado."
+            });
+
+        }
+
+        res.json({
+            success: true,
+            producto
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
             message: error.message
         });
 
