@@ -25,7 +25,10 @@ export const registerService = async(data)=>{
 
     });
 
-    return usuario;
+    const usuarioSinPassword = usuario.toObject();
+    delete usuarioSinPassword.password;
+
+    return usuarioSinPassword;
 
 }
 
@@ -45,9 +48,12 @@ export const loginService = async(email,password)=>{
 
     const token = generateToken(usuario._id,usuario.rol);
 
+    const usuarioSinPassword = usuario.toObject();
+    delete usuarioSinPassword.password;
+
     return{
         token,
-        usuario
+        usuario:usuarioSinPassword
     }
 
 }

@@ -1,9 +1,21 @@
+# Dependencias
 node_modules/
-**/node_modules/
 
+# Variables de entorno (contienen secretos, nunca subir al repo)
 .env
-.env.*
-!.env.example
+.env.local
 
+# Builds
 dist/
-**/dist/
+build/
+
+# Archivos subidos por multer (imágenes de productos en local)
+backend/uploads/
+
+# Logs
+npm-debug.log*
+*.log
+
+# Editor / SO
+.DS_Store
+.vscode/

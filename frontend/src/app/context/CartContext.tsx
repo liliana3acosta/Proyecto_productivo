@@ -1,94 +1,96 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
-
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
-  category: string;
-  sizes: string[];
-}
-
-interface CartItem extends Product {
-  quantity: number;
-  selectedSize: string;
-}
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { api } from '../lib/api';
+import { Carrito } from '../types';
+import { useAuth } from './AuthContext';
 
 interface CartContextType {
-  cart: CartItem[];
-  addToCart: (product: Product, size: string) => void;
-  removeFromCart: (id: string, size: string) => void;
-  updateQuantity: (id: string, size: string, quantity: number) => void;
-  clearCart: () => void;
+  carrito: Carrito | null;
+  cargando: boolean;
+  addToCart: (producto: string, cantidad: number, talla: string, color?: string) => Promise<void>;
+  updateQuantity: (itemId: string, cantidad: number) => Promise<void>;
+  removeFromCart: (itemId: string) => Promise<void>;
+  clearCart: () => Promise<void>;
+  refrescarCarrito: () => Promise<void>;
   getCartTotal: () => number;
   getCartCount: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const CARRITO_VACIO: Carrito = {
+  _id: '',
+  usuario: '',
+  productos: [],
+  total: 0,
+};
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { estaAutenticado } = useAuth();
+  const [carrito, setCarrito] = useState<Carrito | null>(null);
+  const [cargando, setCargando] = useState(false);
 
-  const addToCart = (product: Product, size: string) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find(
-        (item) => item.id === product.id && item.selectedSize === size
-      );
-
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === product.id && item.selectedSize === size
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-
-      return [...prevCart, { ...product, quantity: 1, selectedSize: size }];
-    });
-  };
-
-  const removeFromCart = (id: string, size: string) => {
-    setCart((prevCart) =>
-      prevCart.filter((item) => !(item.id === id && item.selectedSize === size))
-    );
-  };
-
-  const updateQuantity = (id: string, size: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id, size);
+  const refrescarCarrito = useCallback(async () => {
+    if (!estaAutenticado) {
+      setCarrito(null);
       return;
     }
 
-    setCart((prevCart) =>
-      prevCart.map((item) =>
-        item.id === id && item.selectedSize === size
-          ? { ...item, quantity }
-          : item
-      )
-    );
+    setCargando(true);
+
+    try {
+      const data = await api.get<Carrito | null>('/cart');
+      setCarrito(data ?? CARRITO_VACIO);
+    } catch {
+      setCarrito(CARRITO_VACIO);
+    } finally {
+      setCargando(false);
+    }
+  }, [estaAutenticado]);
+
+  useEffect(() => {
+    refrescarCarrito();
+  }, [refrescarCarrito]);
+
+  const addToCart = async (producto: string, cantidad: number, talla: string, color = '') => {
+    const actualizado = await api.post<Carrito>('/cart', { producto, cantidad, talla, color });
+    setCarrito(actualizado);
   };
 
-  const clearCart = () => {
-    setCart([]);
+  const updateQuantity = async (itemId: string, cantidad: number) => {
+    if (cantidad <= 0) {
+      await removeFromCart(itemId);
+      return;
+    }
+
+    const actualizado = await api.put<Carrito>(`/cart/${itemId}`, { cantidad });
+    setCarrito(actualizado);
   };
 
-  const getCartTotal = () => {
-    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const removeFromCart = async (itemId: string) => {
+    const actualizado = await api.delete<Carrito>(`/cart/${itemId}`);
+    setCarrito(actualizado);
   };
 
-  const getCartCount = () => {
-    return cart.reduce((count, item) => count + item.quantity, 0);
+  const clearCart = async () => {
+    const actualizado = await api.delete<Carrito>('/cart');
+    setCarrito(actualizado ?? CARRITO_VACIO);
   };
+
+  const getCartTotal = () => carrito?.total ?? 0;
+
+  const getCartCount = () =>
+    carrito?.productos.reduce((total, item) => total + item.cantidad, 0) ?? 0;
 
   return (
     <CartContext.Provider
       value={{
-        cart,
+        carrito,
+        cargando,
         addToCart,
-        removeFromCart,
         updateQuantity,
+        removeFromCart,
         clearCart,
+        refrescarCarrito,
         getCartTotal,
         getCartCount,
       }}
@@ -101,7 +103,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    throw new Error('useCart debe usarse dentro de un CartProvider');
   }
   return context;
 }
