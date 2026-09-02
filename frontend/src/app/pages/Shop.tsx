@@ -67,8 +67,9 @@ export function Shop() {
     }
 
     const talla = selectedSizes[producto._id];
+    const tallasDisponibles = producto.talla ?? [];
 
-    if (producto.talla.length > 0 && !talla) {
+    if (tallasDisponibles.length > 0 && !talla) {
       toast.error('Por favor, selecciona una talla');
       return;
     }
@@ -124,7 +125,7 @@ export function Shop() {
               <Card key={producto._id} className="overflow-hidden">
                 <CardHeader className="p-0">
                   <ImageWithFallback
-                    src={producto.imagenes[0] ?? ''}
+                    src={producto.imagenes?.[0] ?? ''}
                     alt={producto.nombre}
                     className="w-full h-80 object-cover"
                   />
@@ -135,7 +136,7 @@ export function Shop() {
                   <p className="text-gray-600 mb-4">{producto.descripcion}</p>
                   <div className="text-2xl mb-4">${producto.precio.toFixed(2)}</div>
 
-                  {producto.talla.length > 0 && (
+                  {Array.isArray(producto.talla) && producto.talla.length > 0 && (
                     <Select
                       value={selectedSizes[producto._id] || ''}
                       onValueChange={(value) =>

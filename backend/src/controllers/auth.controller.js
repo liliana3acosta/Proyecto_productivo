@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import bcrypt from "bcryptjs";
 import {
     registerService,
     loginService
@@ -69,6 +70,69 @@ export const profile = async(req,res)=>{
         res.status(500).json({
             success:false,
             message:error.message
+        });
+
+    }
+
+}
+
+export const forgotPassword = async (req, res) => {
+
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "No existe un usuario con este correo."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Correo verificado. Puedes proceder a cambiar tu contraseña.",
+            email
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+
+    }
+
+}
+
+export const resetPassword = async (req, res) => {
+
+    try {
+        const { email, nuevaPassword } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "Usuario no encontrado."
+            });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(nuevaPassword, salt);
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "¡Contraseña actualizada con éxito!"
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            success: false,
+            message: error.message
         });
 
     }

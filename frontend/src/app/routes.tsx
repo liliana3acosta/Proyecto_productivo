@@ -6,6 +6,7 @@ import { Cart } from './pages/Cart';
 import { Checkout } from './pages/Checkout';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { ForgotPassword } from './pages/ForgotPassword'; // <-- 1. Importas el componente nuevo
 import { Orders } from './pages/Orders';
 import { Appointments } from './pages/Appointments';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
   {
     path: '/registro',
     element: <PaginaConHeader><Register /></PaginaConHeader>,
+  },
+  {
+    path: '/recuperar-password', // <-- 2. Agregas esta nueva ruta aquí
+    element: <PaginaConHeader><ForgotPassword /></PaginaConHeader>,
   },
   {
     path: '/pedidos',

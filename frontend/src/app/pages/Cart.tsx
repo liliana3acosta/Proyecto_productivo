@@ -44,7 +44,8 @@ export function Cart() {
     );
   }
 
-  const items = carrito?.productos ?? [];
+  // Filtrar de forma segura para asegurarnos de que el producto y sus propiedades existan
+  const items = carrito?.productos?.filter((item) => item && item.producto) ?? [];
 
   if (items.length === 0) {
     return (
@@ -72,59 +73,64 @@ export function Cart() {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => (
-              <Card key={item._id}>
-                <CardContent className="p-6">
-                  <div className="flex gap-6">
-                    <ImageWithFallback
-                      src={item.producto.imagenes[0] ?? ''}
-                      alt={item.producto.nombre}
-                      className="w-24 h-24 object-cover rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <h3 className="text-lg mb-1">{item.producto.nombre}</h3>
-                      {item.talla && (
-                        <p className="text-gray-600 text-sm mb-2">Talla: {item.talla}</p>
-                      )}
-                      <p className="text-lg mb-4">${item.precio.toFixed(2)}</p>
+            {items.map((item) => {
+              const producto = item.producto;
+              const imagenSrc = producto?.imagenes?.[0] ?? '';
 
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
+              return (
+                <Card key={item._id}>
+                  <CardContent className="p-6">
+                    <div className="flex gap-6">
+                      <ImageWithFallback
+                        src={imagenSrc}
+                        alt={producto?.nombre ?? 'Producto'}
+                        className="w-24 h-24 object-cover rounded-lg"
+                      />
+                      <div className="flex-1">
+                        <h3 className="text-lg mb-1">{producto?.nombre}</h3>
+                        {item.talla && (
+                          <p className="text-gray-600 text-sm mb-2">Talla: {item.talla}</p>
+                        )}
+                        <p className="text-lg mb-4">${(item.precio ?? 0).toFixed(2)}</p>
+
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                updateQuantity(item._id, item.cantidad - 1).catch(manejarError)
+                              }
+                            >
+                              <Minus size={16} />
+                            </Button>
+                            <span className="w-8 text-center">{item.cantidad}</span>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                updateQuantity(item._id, item.cantidad + 1).catch(manejarError)
+                              }
+                            >
+                              <Plus size={16} />
+                            </Button>
+                          </div>
+
                           <Button
                             size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              updateQuantity(item._id, item.cantidad - 1).catch(manejarError)
-                            }
+                            variant="ghost"
+                            onClick={() => removeFromCart(item._id).catch(manejarError)}
                           >
-                            <Minus size={16} />
-                          </Button>
-                          <span className="w-8 text-center">{item.cantidad}</span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              updateQuantity(item._id, item.cantidad + 1).catch(manejarError)
-                            }
-                          >
-                            <Plus size={16} />
+                            <Trash2 size={16} className="mr-2" />
+                            Eliminar
                           </Button>
                         </div>
-
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => removeFromCart(item._id).catch(manejarError)}
-                        >
-                          <Trash2 size={16} className="mr-2" />
-                          Eliminar
-                        </Button>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
 
           <div>
