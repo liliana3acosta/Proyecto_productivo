@@ -10,7 +10,7 @@ dist/
 build/
 
 # Archivos subidos por multer (imágenes de productos en local)
-backend/uploads/
+#backend/uploads/
 
 # Logs
 npm-debug.log*
