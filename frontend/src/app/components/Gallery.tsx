@@ -1,25 +1,29 @@
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import flowyImg from "../../assets/flowy.png";
+import contemporaryImg from "../../assets/contemporary.png";
+import boutiqueImg from "../../assets/boutique.png";
 
 const collections = [
   {
-    title: 'Elegancia en Movimiento',
-    description: 'Prendas que fluyen contigo',
-    image: 'https://images.unsplash.com/photo-1704775990327-90f7c43436fc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwY2xvdGhpbmclMjBkZXNpZ258ZW58MXx8fHwxNzcxNjI1ODg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    title: "Elegancia en Movimiento",
+    description: "Prendas que fluyen contigo",
+    image: flowyImg,
   },
   {
-    title: 'Arte Contemporáneo',
-    description: 'Expresión en cada detalle',
-    image: 'https://images.unsplash.com/photo-1725892604314-5d9c9f363757?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBmYXNoaW9uJTIwbW9kZWx8ZW58MXx8fHwxNzcxNjI1ODg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    title: "Arte Contemporáneo",
+    description: "Expresión en cada detalle",
+    image: contemporaryImg,
   },
   {
-    title: 'Performance',
-    description: 'Del escenario a la calle',
-    image: 'https://images.unsplash.com/photo-1718908721930-31120bc1beb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYW5jZSUyMGFydGlzdGljJTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzcxNjI1ODg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    title: "Performance",
+    description: "Del escenario a la calle",
+    image:
+      "https://images.unsplash.com/photo-1718908721930-31120bc1beb5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYW5jZSUyMGFydGlzdGljJTIwcGVyZm9ybWFuY2V8ZW58MXx8fHwxNzcxNjI1ODg0fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
   },
   {
-    title: 'Boutique Collection',
-    description: 'Exclusividad y estilo',
-    image: 'https://images.unsplash.com/photo-1760287363707-851f4780b98c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwYm91dGlxdWUlMjBpbnRlcmlvcnxlbnwxfHx8fDE3NzE1MjY3Mjd8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    title: "Boutique Collection",
+    description: "Exclusividad y estilo",
+    image: boutiqueImg,
   },
 ];
 
@@ -30,7 +34,8 @@ export function Gallery() {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl mb-4">Colecciones Destacadas</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Explora nuestras líneas más populares donde la moda encuentra al arte
+            Explora nuestras líneas más populares donde la moda encuentra al
+            arte
           </p>
         </div>
 
