@@ -24,7 +24,7 @@ export function Footer() {
           <div>
             <h3 className="text-xl mb-4">Artdance Fashion</h3>
             <p className="text-gray-400">
-              Fusionando arte, danza y moda desde 2009.
+              Fusionando arte, danza y moda desde 2026.
             </p>
           </div>
 
