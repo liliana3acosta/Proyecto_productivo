@@ -1,8 +1,8 @@
-import { Mail, MapPin, Phone } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Card, CardContent } from './ui/card';
+import { Mail, MapPin, Phone } from "lucide-react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
+import { Card, CardContent } from "./ui/card";
 
 export function Contact() {
   return (
@@ -11,7 +11,8 @@ export function Contact() {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl mb-4">Contáctanos</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            ¿Tienes una idea? ¿Necesitas un diseño personalizado? Estamos aquí para ayudarte.
+            ¿Tienes una idea? ¿Necesitas un diseño personalizado? Estamos aquí
+            para ayudarte.
           </p>
         </div>
 
@@ -57,7 +58,7 @@ export function Contact() {
               </div>
               <div>
                 <h3 className="text-xl mb-2">Email</h3>
-                <p className="text-gray-600">info@artdancefashion.com</p>
+                <p className="text-gray-600">acostaclaudia0714@gmail.com</p>
               </div>
             </div>
 
@@ -67,7 +68,7 @@ export function Contact() {
               </div>
               <div>
                 <h3 className="text-xl mb-2">Teléfono</h3>
-                <p className="text-gray-600">+34 910 234 567</p>
+                <p className="text-gray-600">+320 340 2128</p>
               </div>
             </div>
 
@@ -76,10 +77,11 @@ export function Contact() {
                 <MapPin size={24} />
               </div>
               <div>
-                <h3 className="text-xl mb-2">Showroom</h3>
+                <h3 className="text-xl mb-2">Ubicación</h3>
                 <p className="text-gray-600">
-                  Calle Velázquez 45<br />
-                  28001 Madrid, España
+                  Carrera 3 # 10 A02
+                  <br />
+                  San Teo II, Chía, Cundinamarca, Colombia
                 </p>
               </div>
             </div>
