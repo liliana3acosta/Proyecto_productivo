@@ -1,5 +1,5 @@
 import { ImageWithFallback } from "./figma/ImageWithFallback";
-import homeImg from "../../assets/home.png";
+import aboutusImg from "../../assets/image.png";
 
 export function About() {
   return (
@@ -8,7 +8,7 @@ export function About() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div className="order-2 md:order-1">
             <ImageWithFallback
-              src={homeImg}
+              src={aboutusImg}
               alt="Estudio de diseño"
               className="rounded-2xl shadow-2xl w-full h-auto"
             />

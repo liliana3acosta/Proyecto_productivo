@@ -1,6 +1,7 @@
-import { ArrowRight } from 'lucide-react';
-import { Button } from './ui/button';
-import { ImageWithFallback } from './figma/ImageWithFallback';
+import { ArrowRight } from "lucide-react";
+import { Button } from "./ui/button";
+import { ImageWithFallback } from "./figma/ImageWithFallback";
+import homeImg from "../../assets/home.png";
 
 export function Hero() {
   return (
@@ -12,7 +13,8 @@ export function Hero() {
               Donde el arte y la danza se fusionan con la moda
             </h1>
             <p className="text-xl text-gray-600 mb-8">
-              Diseños exclusivos que capturan el movimiento, la elegancia y la expresión artística en cada prenda.
+              Diseños exclusivos que capturan el movimiento, la elegancia y la
+              expresión artística en cada prenda.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" className="text-lg">
@@ -26,7 +28,7 @@ export function Hero() {
           </div>
           <div className="relative">
             <ImageWithFallback
-              src="https://images.unsplash.com/photo-1761882628233-1e23102da76d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmYXNoaW9uJTIwZGFuY2UlMjBtb3ZlbWVudHxlbnwxfHx8fDE3NzE2MjU4ODR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
+              src={homeImg}
               alt="Moda y danza"
               className="rounded-2xl shadow-2xl w-full h-auto"
             />
