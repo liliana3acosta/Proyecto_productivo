@@ -21,16 +21,28 @@ import errorMiddleware from "./middleware/error.middleware.js";
 
 const app = express();
 
-app.use(cors());
+// Configuración CORS para el frontend desplegado en Vercel
+app.use(
+  cors({
+    origin: "https://proyecto-productivo.vercel.app",
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(loggerMiddleware);
-app.use(rateLimitMiddleware({ ventanaMs: 60 * 1000, maxSolicitudes: 200 }));
+app.use(
+  rateLimitMiddleware({
+    ventanaMs: 60 * 1000,
+    maxSolicitudes: 200,
+  })
+);
 
-// Sirve las imágenes subidas por multer (ver middleware/upload.middleware.js)
+// Sirve las imágenes subidas por multer
 app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
-    res.json({ mensaje: "Backend funcionando" });
+  res.json({ mensaje: "Backend funcionando" });
 });
 
 app.use("/api/auth", authRoutes);
@@ -47,9 +59,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use(errorMiddleware);
 
 connectDB().then(() => {
-
-    app.listen(env.PORT, () => {
-        console.log(`Servidor en http://localhost:${env.PORT}`);
-    });
-
+  app.listen(env.PORT, () => {
+    console.log(`Servidor en http://localhost:${env.PORT}`);
+  });
 });
