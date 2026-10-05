@@ -1,19 +1,30 @@
-import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router';
-import { toast } from 'sonner';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { Button } from '../components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../components/ui/card';
-import { ImageWithFallback } from '../components/figma/ImageWithFallback';
-import { ApiError } from '../lib/api';
+import { Minus, Plus, Trash2, ArrowRight } from "lucide-react";
+import { Link } from "react-router";
+import { toast } from "sonner";
+import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
+import { Button } from "../components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { ImageWithFallback } from "../components/figma/ImageWithFallback";
+import { ApiError } from "../lib/api";
+import { formatearPrecio } from "../lib/format";
 
 export function Cart() {
   const { estaAutenticado } = useAuth();
-  const { carrito, cargando, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { carrito, cargando, updateQuantity, removeFromCart, getCartTotal } =
+    useCart();
 
   const manejarError = (error: unknown) => {
-    const mensaje = error instanceof ApiError ? error.message : 'Ocurrió un error con el carrito.';
+    const mensaje =
+      error instanceof ApiError
+        ? error.message
+        : "Ocurrió un error con el carrito.";
     toast.error(mensaje);
   };
 
@@ -26,7 +37,7 @@ export function Cart() {
             Inicia sesión para ver y gestionar tu carrito.
           </p>
           <Button size="lg" asChild>
-            <Link to="/login" state={{ from: '/cart' }}>
+            <Link to="/login" state={{ from: "/cart" }}>
               Iniciar sesión
               <ArrowRight className="ml-2" size={20} />
             </Link>
@@ -45,7 +56,8 @@ export function Cart() {
   }
 
   // Filtrar de forma segura para asegurarnos de que el producto y sus propiedades existan
-  const items = carrito?.productos?.filter((item) => item && item.producto) ?? [];
+  const items =
+    carrito?.productos?.filter((item) => item && item.producto) ?? [];
 
   if (items.length === 0) {
     return (
@@ -75,7 +87,7 @@ export function Cart() {
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => {
               const producto = item.producto;
-              const imagenSrc = producto?.imagenes?.[0] ?? '';
+              const imagenSrc = producto?.imagenes?.[0] ?? "";
 
               return (
                 <Card key={item._id}>
@@ -83,33 +95,44 @@ export function Cart() {
                     <div className="flex gap-6">
                       <ImageWithFallback
                         src={imagenSrc}
-                        alt={producto?.nombre ?? 'Producto'}
+                        alt={producto?.nombre ?? "Producto"}
                         className="w-24 h-24 object-cover rounded-lg"
                       />
                       <div className="flex-1">
                         <h3 className="text-lg mb-1">{producto?.nombre}</h3>
                         {item.talla && (
-                          <p className="text-gray-600 text-sm mb-2">Talla: {item.talla}</p>
+                          <p className="text-gray-600 text-sm mb-2">
+                            Talla: {item.talla}
+                          </p>
                         )}
-                        <p className="text-lg mb-4">${(item.precio ?? 0).toFixed(2)}</p>
-
+                        <p className="text-lg mb-4">
+                          ${formatearPrecio(item.precio ?? 0)}
+                        </p>
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-2">
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() =>
-                                updateQuantity(item._id, item.cantidad - 1).catch(manejarError)
+                                updateQuantity(
+                                  item._id,
+                                  item.cantidad - 1
+                                ).catch(manejarError)
                               }
                             >
                               <Minus size={16} />
                             </Button>
-                            <span className="w-8 text-center">{item.cantidad}</span>
+                            <span className="w-8 text-center">
+                              {item.cantidad}
+                            </span>
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() =>
-                                updateQuantity(item._id, item.cantidad + 1).catch(manejarError)
+                                updateQuantity(
+                                  item._id,
+                                  item.cantidad + 1
+                                ).catch(manejarError)
                               }
                             >
                               <Plus size={16} />
@@ -119,7 +142,9 @@ export function Cart() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => removeFromCart(item._id).catch(manejarError)}
+                            onClick={() =>
+                              removeFromCart(item._id).catch(manejarError)
+                            }
                           >
                             <Trash2 size={16} className="mr-2" />
                             Eliminar
@@ -141,7 +166,7 @@ export function Cart() {
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Subtotal</span>
-                  <span>${getCartTotal().toFixed(2)}</span>
+                  <span>${formatearPrecio(getCartTotal())}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Envío</span>
@@ -150,7 +175,7 @@ export function Cart() {
                 <div className="border-t pt-4">
                   <div className="flex justify-between text-xl">
                     <span>Total</span>
-                    <span>${getCartTotal().toFixed(2)}</span>
+                    <span>${formatearPrecio(getCartTotal())}</span>
                   </div>
                 </div>
               </CardContent>

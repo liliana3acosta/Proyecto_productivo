@@ -1,18 +1,24 @@
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router';
-import { toast } from 'sonner';
-import { api, ApiError } from '../lib/api';
-import { Orden, RespuestaPaginada, EstadoOrden } from '../types';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Badge } from '../components/ui/badge';
-import { Button } from '../components/ui/button';
+import { useEffect, useState } from "react";
+import { Link } from "react-router";
+import { toast } from "sonner";
+import { api, ApiError } from "../lib/api";
+import { Orden, RespuestaPaginada, EstadoOrden } from "../types";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Badge } from "../components/ui/badge";
+import { Button } from "../components/ui/button";
+import { formatearPrecio } from "../lib/format";
 
 const colorEstado: Record<EstadoOrden, string> = {
-  pendiente: 'bg-yellow-100 text-yellow-800',
-  pagado: 'bg-blue-100 text-blue-800',
-  enviado: 'bg-purple-100 text-purple-800',
-  entregado: 'bg-green-100 text-green-800',
-  cancelado: 'bg-red-100 text-red-800',
+  pendiente: "bg-yellow-100 text-yellow-800",
+  pagado: "bg-blue-100 text-blue-800",
+  enviado: "bg-purple-100 text-purple-800",
+  entregado: "bg-green-100 text-green-800",
+  cancelado: "bg-red-100 text-red-800",
 };
 
 export function Orders() {
@@ -22,10 +28,15 @@ export function Orders() {
   useEffect(() => {
     async function cargar() {
       try {
-        const respuesta = await api.get<RespuestaPaginada<Orden>>('/orders/mis-ordenes');
+        const respuesta = await api.get<RespuestaPaginada<Orden>>(
+          "/orders/mis-ordenes"
+        );
         setOrdenes(respuesta.data);
       } catch (error) {
-        const mensaje = error instanceof ApiError ? error.message : 'No se pudieron cargar tus pedidos.';
+        const mensaje =
+          error instanceof ApiError
+            ? error.message
+            : "No se pudieron cargar tus pedidos.";
         toast.error(mensaje);
       } finally {
         setCargando(false);
@@ -44,7 +55,9 @@ export function Orders() {
           <p className="text-gray-500">Cargando...</p>
         ) : ordenes.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-600 mb-6">Todavía no has hecho ningún pedido.</p>
+            <p className="text-gray-600 mb-6">
+              Todavía no has hecho ningún pedido.
+            </p>
             <Button asChild>
               <Link to="/shop">Ir a la tienda</Link>
             </Button>
@@ -57,25 +70,31 @@ export function Orders() {
                   <CardTitle className="text-lg">
                     Pedido #{orden._id.slice(-6).toUpperCase()}
                   </CardTitle>
-                  <Badge className={colorEstado[orden.estado]}>{orden.estado}</Badge>
+                  <Badge className={colorEstado[orden.estado]}>
+                    {orden.estado}
+                  </Badge>
                 </CardHeader>
                 <CardContent>
                   <p className="text-sm text-gray-500 mb-3">
-                    {new Date(orden.createdAt).toLocaleDateString()} · Envío a: {orden.direccionEnvio}
+                    {new Date(orden.createdAt).toLocaleDateString()} · Envío a:{" "}
+                    {orden.direccionEnvio}
                   </p>
                   <div className="space-y-1 mb-3">
                     {orden.productos.map((item, i) => (
                       <div key={i} className="flex justify-between text-sm">
                         <span>
-                          {item.nombre} {item.talla ? `(${item.talla})` : ''} x{item.cantidad}
+                          {item.nombre} {item.talla ? `(${item.talla})` : ""} x
+                          {item.cantidad}
                         </span>
-                        <span>${(item.precio * item.cantidad).toFixed(2)}</span>
+                        <span>
+                          ${formatearPrecio(item.precio * item.cantidad)}
+                        </span>
                       </div>
                     ))}
                   </div>
                   <div className="flex justify-between text-lg border-t pt-3">
                     <span>Total</span>
-                    <span>${orden.total.toFixed(2)}</span>
+                    <span>${formatearPrecio(orden.total)}</span>
                   </div>
                 </CardContent>
               </Card>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import { api, ApiError } from '../../lib/api';
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { api, ApiError } from "../../lib/api";
 import {
   ResumenDashboard,
   Cita,
@@ -9,23 +9,51 @@ import {
   RespuestaPaginada,
   EstadoCita,
   EstadoOrden,
-} from '../../types';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+} from "../../types";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../../components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../../components/ui/tabs";
+import { Badge } from "../../components/ui/badge";
+import { Button } from "../../components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../../components/ui/select';
+} from "../../components/ui/select";
+import { formatearPrecio } from "../../lib/format";
 
-const ESTADOS_ORDEN: EstadoOrden[] = ['pendiente', 'pagado', 'enviado', 'entregado', 'cancelado'];
-const ESTADOS_CITA: EstadoCita[] = ['pendiente', 'confirmada', 'cancelada', 'completada'];
+const ESTADOS_ORDEN: EstadoOrden[] = [
+  "pendiente",
+  "pagado",
+  "enviado",
+  "entregado",
+  "cancelado",
+];
+const ESTADOS_CITA: EstadoCita[] = [
+  "pendiente",
+  "confirmada",
+  "cancelada",
+  "completada",
+];
 
-function TarjetaResumen({ titulo, valor }: { titulo: string; valor: string | number }) {
+function TarjetaResumen({
+  titulo,
+  valor,
+}: {
+  titulo: string;
+  valor: string | number;
+}) {
   return (
     <Card>
       <CardContent className="p-6">
@@ -51,19 +79,20 @@ export function AdminDashboard() {
   const cargarTodo = async () => {
     setCargando(true);
     try {
-      const [resumenData, citasData, ordenesData, productosData] = await Promise.all([
-        api.get<ResumenDashboard>('/dashboard/resumen'),
-        api.get<Cita[]>('/appointments'),
-        api.get<RespuestaPaginada<Orden>>('/orders'),
-        api.get<Producto[]>('/products', { auth: false }),
-      ]);
+      const [resumenData, citasData, ordenesData, productosData] =
+        await Promise.all([
+          api.get<ResumenDashboard>("/dashboard/resumen"),
+          api.get<Cita[]>("/appointments"),
+          api.get<RespuestaPaginada<Orden>>("/orders"),
+          api.get<Producto[]>("/products", { auth: false }),
+        ]);
 
       setResumen(resumenData);
       setCitas(citasData);
       setOrdenes(ordenesData.data);
       setProductos(productosData);
     } catch (error) {
-      manejarError(error, 'No se pudo cargar el panel de administración.');
+      manejarError(error, "No se pudo cargar el panel de administración.");
     } finally {
       setCargando(false);
     }
@@ -76,20 +105,24 @@ export function AdminDashboard() {
   const cambiarEstadoCita = async (id: string, estado: EstadoCita) => {
     try {
       await api.put(`/appointments/${id}/estado`, { estado });
-      setCitas((prev) => prev.map((c) => (c._id === id ? { ...c, estado } : c)));
-      toast.success('Estado de la cita actualizado.');
+      setCitas((prev) =>
+        prev.map((c) => (c._id === id ? { ...c, estado } : c))
+      );
+      toast.success("Estado de la cita actualizado.");
     } catch (error) {
-      manejarError(error, 'No se pudo actualizar la cita.');
+      manejarError(error, "No se pudo actualizar la cita.");
     }
   };
 
   const cambiarEstadoOrden = async (id: string, estado: EstadoOrden) => {
     try {
       await api.put(`/orders/${id}/estado`, { estado });
-      setOrdenes((prev) => prev.map((o) => (o._id === id ? { ...o, estado } : o)));
-      toast.success('Estado del pedido actualizado.');
+      setOrdenes((prev) =>
+        prev.map((o) => (o._id === id ? { ...o, estado } : o))
+      );
+      toast.success("Estado del pedido actualizado.");
     } catch (error) {
-      manejarError(error, 'No se pudo actualizar el pedido.');
+      manejarError(error, "No se pudo actualizar el pedido.");
     }
   };
 
@@ -97,9 +130,9 @@ export function AdminDashboard() {
     try {
       await api.delete(`/products/${id}`);
       setProductos((prev) => prev.filter((p) => p._id !== id));
-      toast.success('Producto eliminado.');
+      toast.success("Producto eliminado.");
     } catch (error) {
-      manejarError(error, 'No se pudo eliminar el producto.');
+      manejarError(error, "No se pudo eliminar el producto.");
     }
   };
 
@@ -121,8 +154,14 @@ export function AdminDashboard() {
             <TarjetaResumen titulo="Usuarios" valor={resumen.totalUsuarios} />
             <TarjetaResumen titulo="Productos" valor={resumen.totalProductos} />
             <TarjetaResumen titulo="Pedidos" valor={resumen.totalOrdenes} />
-            <TarjetaResumen titulo="Ventas totales" valor={`$${resumen.totalVentas.toFixed(2)}`} />
-            <TarjetaResumen titulo="Citas pendientes" valor={resumen.citasPendientes} />
+            <TarjetaResumen
+              titulo="Ventas totales"
+              valor={`$${formatearPrecio(resumen.totalVentas)}`}
+            />
+            <TarjetaResumen
+              titulo="Citas pendientes"
+              valor={resumen.citasPendientes}
+            />
           </div>
         )}
 
@@ -143,14 +182,17 @@ export function AdminDashboard() {
                     <div>
                       <p className="font-medium">{cita.servicio}</p>
                       <p className="text-sm text-gray-500">
-                        {new Date(cita.fecha).toLocaleDateString()} · {cita.hora}
-                        {typeof cita.usuario === 'object' &&
+                        {new Date(cita.fecha).toLocaleDateString()} ·{" "}
+                        {cita.hora}
+                        {typeof cita.usuario === "object" &&
                           ` · ${cita.usuario.nombre} ${cita.usuario.apellido}`}
                       </p>
                     </div>
                     <Select
                       value={cita.estado}
-                      onValueChange={(valor: EstadoCita) => cambiarEstadoCita(cita._id, valor)}
+                      onValueChange={(valor: EstadoCita) =>
+                        cambiarEstadoCita(cita._id, valor)
+                      }
                     >
                       <SelectTrigger className="w-40">
                         <SelectValue />
@@ -178,17 +220,20 @@ export function AdminDashboard() {
                   <CardContent className="p-4 flex flex-wrap items-center justify-between gap-4">
                     <div>
                       <p className="font-medium">
-                        Pedido #{orden._id.slice(-6).toUpperCase()} · ${orden.total.toFixed(2)}
+                        Pedido #{orden._id.slice(-6).toUpperCase()} · $
+                        {formatearPrecio(orden.total)}
                       </p>
                       <p className="text-sm text-gray-500">
                         {new Date(orden.createdAt).toLocaleDateString()}
-                        {typeof orden.usuario === 'object' &&
+                        {typeof orden.usuario === "object" &&
                           ` · ${orden.usuario.nombre} ${orden.usuario.apellido}`}
                       </p>
                     </div>
                     <Select
                       value={orden.estado}
-                      onValueChange={(valor: EstadoOrden) => cambiarEstadoOrden(orden._id, valor)}
+                      onValueChange={(valor: EstadoOrden) =>
+                        cambiarEstadoOrden(orden._id, valor)
+                      }
                     >
                       <SelectTrigger className="w-40">
                         <SelectValue />
@@ -217,12 +262,13 @@ export function AdminDashboard() {
                     <div>
                       <p className="font-medium">{producto.nombre}</p>
                       <p className="text-sm text-gray-500">
-                        ${producto.precio.toFixed(2)} · Stock: {producto.stock}
+                        ${formatearPrecio(producto.precio)} · Stock:{" "}
+                        {producto.stock}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Badge variant={producto.estado ? 'default' : 'outline'}>
-                        {producto.estado ? 'Activo' : 'Inactivo'}
+                      <Badge variant={producto.estado ? "default" : "outline"}>
+                        {producto.estado ? "Activo" : "Inactivo"}
                       </Badge>
                       <Button
                         size="sm"
@@ -237,8 +283,8 @@ export function AdminDashboard() {
               ))
             )}
             <p className="text-sm text-gray-500">
-              Crear y editar productos/categorías aún se hace desde la API (Postman/Insomnia) o se
-              puede agregar aquí como siguiente paso.
+              Crear y editar productos/categorías aún se hace desde la API
+              (Postman/Insomnia) o se puede agregar aquí como siguiente paso.
             </p>
           </TabsContent>
         </Tabs>
