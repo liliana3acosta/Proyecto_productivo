@@ -26,20 +26,6 @@ export function About() {
               creando prendas que no solo se ven bien, sino que permiten la
               máxima expresión artística sin comprometer el estilo.
             </p>
-            <div className="grid grid-cols-3 gap-6 pt-6">
-              <div>
-                <div className="text-3xl mb-2">15+</div>
-                <div className="text-gray-600">Años</div>
-              </div>
-              <div>
-                <div className="text-3xl mb-2">5000+</div>
-                <div className="text-gray-600">Clientes</div>
-              </div>
-              <div>
-                <div className="text-3xl mb-2">50+</div>
-                <div className="text-gray-600">Colecciones</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
