@@ -1,22 +1,24 @@
-import { ReactNode } from 'react';
-import { createBrowserRouter } from 'react-router';
-import { Home } from './pages/Home';
-import { Shop } from './pages/Shop';
-import { Cart } from './pages/Cart';
-import { Checkout } from './pages/Checkout';
-import { Login } from './pages/Login';
-import { Register } from './pages/Register';
-import { ForgotPassword } from './pages/ForgotPassword'; // <-- 1. Importas el componente nuevo
-import { Orders } from './pages/Orders';
-import { Appointments } from './pages/Appointments';
-import { AdminDashboard } from './pages/admin/AdminDashboard';
-import { Header } from './components/Header';
-import { Footer } from './components/Footer';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ReactNode } from "react";
+import { createBrowserRouter } from "react-router";
+import { Home } from "./pages/Home";
+import { Shop } from "./pages/Shop";
+import { Cart } from "./pages/Cart";
+import { Checkout } from "./pages/Checkout";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { ForgotPassword } from "./pages/ForgotPassword"; // <-- 1. Importas el componente nuevo
+import { Orders } from "./pages/Orders";
+import { Appointments } from "./pages/Appointments";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { Header } from "./components/Header";
+import { Footer } from "./components/Footer";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <div className="min-h-screen">
+      <ScrollToTop />
       {children}
     </div>
   );
@@ -32,35 +34,63 @@ const PaginaConHeader = ({ children }: { children: ReactNode }) => (
 
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: <Layout><Home /></Layout>,
+    path: "/",
+    element: (
+      <Layout>
+        <Home />
+      </Layout>
+    ),
   },
   {
-    path: '/shop',
-    element: <PaginaConHeader><Shop /></PaginaConHeader>,
+    path: "/shop",
+    element: (
+      <PaginaConHeader>
+        <Shop />
+      </PaginaConHeader>
+    ),
   },
   {
-    path: '/cart',
-    element: <PaginaConHeader><Cart /></PaginaConHeader>,
+    path: "/cart",
+    element: (
+      <PaginaConHeader>
+        <Cart />
+      </PaginaConHeader>
+    ),
   },
   {
-    path: '/checkout',
-    element: <PaginaConHeader><Checkout /></PaginaConHeader>,
+    path: "/checkout",
+    element: (
+      <PaginaConHeader>
+        <Checkout />
+      </PaginaConHeader>
+    ),
   },
   {
-    path: '/login',
-    element: <PaginaConHeader><Login /></PaginaConHeader>,
+    path: "/login",
+    element: (
+      <PaginaConHeader>
+        <Login />
+      </PaginaConHeader>
+    ),
   },
   {
-    path: '/registro',
-    element: <PaginaConHeader><Register /></PaginaConHeader>,
+    path: "/registro",
+    element: (
+      <PaginaConHeader>
+        <Register />
+      </PaginaConHeader>
+    ),
   },
   {
-    path: '/recuperar-password', // <-- 2. Agregas esta nueva ruta aquí
-    element: <PaginaConHeader><ForgotPassword /></PaginaConHeader>,
+    path: "/recuperar-password", // <-- 2. Agregas esta nueva ruta aquí
+    element: (
+      <PaginaConHeader>
+        <ForgotPassword />
+      </PaginaConHeader>
+    ),
   },
   {
-    path: '/pedidos',
+    path: "/pedidos",
     element: (
       <PaginaConHeader>
         <ProtectedRoute>
@@ -70,7 +100,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/citas',
+    path: "/citas",
     element: (
       <PaginaConHeader>
         <ProtectedRoute>
@@ -80,7 +110,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: '/admin',
+    path: "/admin",
     element: (
       <PaginaConHeader>
         <ProtectedRoute soloAdmin>
